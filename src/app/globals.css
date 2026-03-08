@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #ffffff;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+@layer base {
+  body {
+    @apply bg-[#050505] text-white;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/5 backdrop-blur-lg border border-white/10;
+  }
+  
+  .glass-card {
+    @apply glass rounded-2xl p-6 transition-all duration-300 hover:bg-white/10 hover:border-white/20;
+  }
+
+  .btn-primary {
+    @apply bg-[#ff3d00] hover:bg-[#e63600] text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(255,61,0,0.3)];
+  }
+
+  .pulse-border {
+    position: relative;
+  }
+
+  .pulse-border::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #ff3d00, #ff8a00, #ff3d00);
+    z-index: -1;
+    border-radius: inherit;
+    background-size: 200% 200%;
+    animation: gradient-pulse 4s linear infinite;
+    opacity: 0.5;
+  }
+}
+
+@keyframes gradient-pulse {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.hero-mesh {
+  background-image: 
+    radial-gradient(at 0% 0%, hsla(14, 100%, 50%, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(202, 100%, 50%, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, hsla(14, 100%, 50%, 0.15) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, hsla(202, 100%, 50%, 0.1) 0px, transparent 50%);
+}
