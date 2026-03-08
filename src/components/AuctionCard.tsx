@@ -22,6 +22,8 @@ export default function AuctionCard({ id, title, image, currentBid: initialBid, 
     const supabase = createClient();
 
     useEffect(() => {
+        if (!supabase) return;
+
         // 1. Listen for REAL-TIME updates on this specific lot
         const channel = supabase
             .channel(`lot-${id}`)
@@ -33,7 +35,7 @@ export default function AuctionCard({ id, title, image, currentBid: initialBid, 
                     table: 'lots',
                     filter: `id=eq.${id}`,
                 },
-                (payload) => {
+                (payload: any) => {
                     setCurrentBid(payload.new.current_bid);
                     setPulse(true);
                     setTimeout(() => setPulse(false), 1000);
@@ -41,9 +43,9 @@ export default function AuctionCard({ id, title, image, currentBid: initialBid, 
             )
             .subscribe();
 
-        // 2. Fallback: Simulation for demo if no Supabase keys are active
+        // 2. Simulation for demo if no Supabase keys are active
         const simInterval = setInterval(() => {
-            if (!process.env.NEXT_PUBLIC_SUPABASE_URL && Math.random() > 0.8) {
+            if (process.env.NODE_ENV === 'development' && Math.random() > 0.8) {
                 setCurrentBid(prev => prev + Math.floor(Math.random() * 50) + 10);
                 setPulse(true);
                 setTimeout(() => setPulse(false), 1000);

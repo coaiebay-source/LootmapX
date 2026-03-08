@@ -15,13 +15,15 @@ export default function LotPage({ params }: { params: { id: string } }) {
     const supabase = createClient();
 
     useEffect(() => {
+        if (!supabase) return;
+
         // Listen for bid updates on this lot
         const channel = supabase
             .channel(`bid-stream-${params.id}`)
             .on(
                 'postgres_changes',
                 { event: 'INSERT', schema: 'public', table: 'bids', filter: `lot_id=eq.${params.id}` },
-                (payload) => {
+                (payload: any) => {
                     setCurrentBid(payload.new.amount);
                     setBidAmount(payload.new.amount + 5);
                     setPulse(true);
@@ -36,7 +38,7 @@ export default function LotPage({ params }: { params: { id: string } }) {
     }, [params.id, supabase]);
 
     const handlePlaceBid = async () => {
-        if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+        if (!supabase) {
             // Demo mode
             setIsBidding(true);
             setTimeout(() => {
